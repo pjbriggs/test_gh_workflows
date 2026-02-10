@@ -1,0 +1,6 @@
+.gitignore
+*~
+*.pyc
+build/
+*.egg*
+__pycache__
