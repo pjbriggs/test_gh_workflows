@@ -37,20 +37,9 @@ jobs:
       VERSION: ${{ github.event.inputs.version }}
       ##CHANGES: ${{ github.event.inputs.changes }}
     steps:
-      ## The PR creation makes a branch
-      ## so maybe this step is not required?
-      #- name: Create version branch
-      #  uses: peterjgrainger/action-create-branch@v3.0.0
-      #  env:
-      #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #  with:
-      #    branch: version-${{ env.VERSION }}
-      #    sha: '${{ github.event.pull_request.head.sha }}'
 
       - name: Checkout repo
         uses: actions/checkout@v6
-      #  with:
-      #    ref: version-${{ env.VERSION }}
 
       - name: Update package version
         run: |
@@ -59,13 +48,9 @@ jobs:
           echo "Contents: $(ls -l)"
           sed -i "s/^__version__ = .*/__version__ = \"$VERSION\"/" pbtbx/__init__.py
 
-      ## PR also commits changes in the checked out version?
-      #- name: Commit updated version
-      #  uses: stefanzweifel/git-auto-commit-action@v5
-      #  with:
-      #    commit_message: "chore: bump version to ${VERSION}"
-      #    branch: version-${{ env.VERSION }}
-
+      # NB Ensure that Settings -> Actions -> General on Github
+      # allows Github Actions to create and approve pull requests
+      # otherwise this step will fail
       - name: Create pull request for release
         id: cpr
         uses: peter-evans/create-pull-request@v8.1.0
@@ -75,8 +60,8 @@ jobs:
           commit-message: "chore: bump version to {{ env.VERSION }}"
           base: devel
           branch: version-${{ env.VERSION }}
-          title: "pbtbx version $VERSION"
-          body: "Automated release PR for version ${VERSION}"
+          title: "pbtbx version ${{ env.VERSION }}"
+          body: "Automated release PR for new version ${{ env.VERSION }}"
 
       #- name: Add "release" label to PR
       #  if: steps.cpr.outputs.pull-request-number
