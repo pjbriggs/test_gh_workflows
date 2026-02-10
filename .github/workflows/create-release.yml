@@ -50,12 +50,12 @@ jobs:
 
       - name: Update package version
         run: |
-	  echo "Updating version to $VERSION"
-	  sed -i "s/^__version__ = .*/__version__ = \"$VERSION\"/" test_gh_workflows/pbtbx/__init__.py
+          echo "Updating version to $VERSION"
+          sed -i "s/^__version__ = .*/__version__ = \"$VERSION\"/" test_gh_workflows/pbtbx/__init__.py
 
       - name: Commit updated version
         uses: stefanzweifel/git-auto-commit-action@v5
-	with:
+        with:
           commit_message: "chore: bump version to ${VERSION}"
           branch: "version-${VERSION}"
 
