@@ -37,18 +37,20 @@ jobs:
       VERSION: ${{ github.event.inputs.version }}
       ##CHANGES: ${{ github.event.inputs.changes }}
     steps:
-      - name: Create version branch
-        uses: peterjgrainger/action-create-branch@v3.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          branch: version-${{ env.VERSION }}
-          sha: '${{ github.event.pull_request.head.sha }}'
+      ## The PR creation makes a branch
+      ## so maybe this step is not required?
+      #- name: Create version branch
+      #  uses: peterjgrainger/action-create-branch@v3.0.0
+      #  env:
+      #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #  with:
+      #    branch: version-${{ env.VERSION }}
+      #    sha: '${{ github.event.pull_request.head.sha }}'
 
       - name: Checkout repo
         uses: actions/checkout@v6
-        with:
-          ref: version-${{ env.VERSION }}
+      #  with:
+      #    ref: version-${{ env.VERSION }}
 
       - name: Update package version
         run: |
