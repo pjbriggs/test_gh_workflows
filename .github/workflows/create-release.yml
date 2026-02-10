@@ -57,7 +57,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          commit-message: "chore: bump version to {{ env.VERSION }}"
+          commit-message: "chore: bump version to ${{ env.VERSION }}"
           base: devel
           branch: version-${{ env.VERSION }}
           title: "pbtbx version ${{ env.VERSION }}"
