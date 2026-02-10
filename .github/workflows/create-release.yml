@@ -59,16 +59,18 @@ jobs:
           echo "Contents: $(ls -l)"
           sed -i "s/^__version__ = .*/__version__ = \"$VERSION\"/" pbtbx/__init__.py
 
-      - name: Commit updated version
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "chore: bump version to ${VERSION}"
-          branch: version-${{ env.VERSION }}
+      ## PR also commits changes in the checked out version?
+      #- name: Commit updated version
+      #  uses: stefanzweifel/git-auto-commit-action@v5
+      #  with:
+      #    commit_message: "chore: bump version to ${VERSION}"
+      #    branch: version-${{ env.VERSION }}
 
       - name: Create pull request for release
         id: cpr
         uses: peter-evans/create-pull-request@v6
         with:
+          commit-message: "chore: bump version to {{ env.VERSION }}"
           base: devel
           branch: version-${{ env.VERSION }}
           title: "pbtbx version $VERSION"
