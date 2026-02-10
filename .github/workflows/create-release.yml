@@ -46,7 +46,9 @@ jobs:
           sha: '${{ github.event.pull_request.head.sha }}'
 
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+        with:
+          ref: version-${{ env.VERSION }}
 
       - name: Update package version
         run: |
