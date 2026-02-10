@@ -1,0 +1,77 @@
+# language: yaml
+#
+# Github workflow to automate my release process
+#
+# User must manually trigger the workflow via "Actions" and
+# supply a version number
+#
+---
+
+name: Create release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version (e.g. 1.2.3)'
+        required: true
+      ## Don't try to deal with change log at this point
+      #changes:
+      #  description: 'Optional changelog entries (markdown or bullet list)'
+      #  required: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  checks: read
+
+concurrency:
+  group: create-release-${{ github.event.inputs.version }}
+  cancel-in-progress: false
+
+jobs:
+  make-pull-request:
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ github.event.inputs.version }}
+      ##CHANGES: ${{ github.event.inputs.changes }}
+    steps:
+      - name: Create version branch
+        uses: peterjgrainger/action-create-branch@v2.2.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          branch: "version-${VERSION}"
+          sha: '${{ github.event.pull_request.head.sha }}'
+
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Update package version
+        run: |
+	  echo "Updating version to $VERSION"
+	  sed -i "s/^__version__ = .*/__version__ = \"$VERSION\"/" test_gh_workflows/pbtbx/__init__.py
+
+      - name: Commit updated version
+        uses: stefanzweifel/git-auto-commit-action@v5
+	with:
+          commit_message: "chore: bump version to ${VERSION}"
+          branch: "version-${VERSION}"
+
+      - name: Create pull request for release
+        id: cpr
+        uses: peter-evans/create-pull-request@v6
+        with:
+          base: devel
+          branch: "version-${VERSION}"
+          title: "pbtbx version $VERSION"
+          body: "Automated release PR for version ${VERSION}"
+
+      #- name: Add "release" label to PR
+      #  if: steps.cpr.outputs.pull-request-number
+      #  uses: actions-ecosystem/action-add-labels@v1
+      #  with:
+      #    github_token: ${{ secrets.GITHUB_TOKEN }}
+      #    number: ${{ steps.cpr.outputs.pull-request-number }}
+      #    labels: release
