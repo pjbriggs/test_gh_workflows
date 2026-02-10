@@ -51,9 +51,9 @@ jobs:
       - name: Update package version
         run: |
           echo "Updating version to $VERSION"
-          echo "$(pwd)"
-          echo "$(ls -l)"
-          sed -i "s/^__version__ = .*/__version__ = \"$VERSION\"/" test_gh_workflows/pbtbx/__init__.py
+          echo "Current directory: $(pwd)"
+          echo "Contents: $(ls -l)"
+          sed -i "s/^__version__ = .*/__version__ = \"$VERSION\"/" pbtbx/__init__.py
 
       - name: Commit updated version
         uses: stefanzweifel/git-auto-commit-action@v5
