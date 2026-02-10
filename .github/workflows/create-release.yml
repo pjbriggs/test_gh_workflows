@@ -42,7 +42,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          branch: "version-${VERSION}"
+          branch: version-${{ env.VERSION }}
           sha: '${{ github.event.pull_request.head.sha }}'
 
       - name: Checkout repo
@@ -59,14 +59,14 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore: bump version to ${VERSION}"
-          branch: "version-${VERSION}"
+          branch: version-${{ env.VERSION }}"
 
       - name: Create pull request for release
         id: cpr
         uses: peter-evans/create-pull-request@v6
         with:
           base: devel
-          branch: "version-${VERSION}"
+          branch: version-${{ env.VERSION }}
           title: "pbtbx version $VERSION"
           body: "Automated release PR for version ${VERSION}"
 
