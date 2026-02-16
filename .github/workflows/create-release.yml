@@ -63,10 +63,10 @@ jobs:
           title: "pbtbx version ${{ env.VERSION }}"
           body: "Automated release PR for new version ${{ env.VERSION }}"
 
-      #- name: Add "release" label to PR
-      #  if: steps.cpr.outputs.pull-request-number
-      #  uses: actions-ecosystem/action-add-labels@v1
-      #  with:
-      #    github_token: ${{ secrets.GITHUB_TOKEN }}
-      #    number: ${{ steps.cpr.outputs.pull-request-number }}
-      #    labels: release
+      - name: Add "release" label to PR
+        if: steps.cpr.outputs.pull-request-number
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          number: ${{ steps.cpr.outputs.pull-request-number }}
+          labels: release
