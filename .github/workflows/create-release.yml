@@ -70,3 +70,16 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           number: ${{ steps.cpr.outputs.pull-request-number }}
           labels: release
+
+      # NB By default one workflow won't trigger another
+      # (so the Python CI workflow won't be initiated by the
+      # pull request created above)
+
+      - name: Merge PR
+        id: mgr
+        uses: juliangruber/merge-pull-request-action@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          number: ${{ steps.cpr.outputs.pull-request-number }}
+          method: merge
+          repo: juliangruber/octokit-action
