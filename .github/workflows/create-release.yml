@@ -81,27 +81,29 @@ jobs:
     runs-on: ubuntu-latest
     needs: make-pull-request
     steps:
-      #- name: Merge PR
-      #  id: mgr
-      #  uses: juliangruber/merge-pull-request-action@v1.3.1
-      #  with:
-      #    github-token: ${{ secrets.GITHUB_TOKEN }}
-      #    number: ${{ steps.cpr.outputs.pull-request-number }}
-      #    method: merge
-      #    repo: pjbriggs/test_gh_workflows
-
-      #- name: Merge pull request
-      #  uses: peter-evans/enable-pull-request-automerge@v3
-      #  with:
-      #    pull-request-number: ${{ needs.prepare-release.outputs.pr-number }}
-      #    merge-method: merge
-      #    token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Checkout repo
         uses: actions/checkout@v6
 
-      - name: Merge Pull Request
+      - name: Merge and delete Pull Request
         run: |
-          gh pr merge --merge --auto "${{ needs.make-pull-request.outputs.pr-number }}"
+          gh pr merge --merge --auto "${{ needs.make-pull-request.outputs.pr-number }}" --delete-branch
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Merge changes into main branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+	  git checkout -b master origin/master
+	  git merge devel
+	  git push
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: "master"
+
+      #- name: Make release
+      #  run: |
+      #    gh release create
