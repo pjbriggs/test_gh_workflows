@@ -97,6 +97,9 @@ jobs:
       #    merge-method: merge
       #    token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
       - name: Merge Pull Request
         run: |
           gh pr merge --merge --auto "${{ needs.make-pull-request.outputs.pr-number }}"
