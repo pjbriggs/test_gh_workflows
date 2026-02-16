@@ -99,6 +99,6 @@ jobs:
 
       - name: Merge Pull Request
         run: |
-          gh pr merge --merge --auto "${{ needs.prepare-release.outputs.pr-number }}"
+          gh pr merge --merge --auto "${{ needs.make-pull-request.outputs.pr-number }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
