@@ -105,7 +105,7 @@ jobs:
 
       - name: Tag release
         run: |
-          git tag -a -m "Release ${{ env.VERSION }}" ${{ env.VERSION }}
+          git tag -a -m "Release ${{ env.VERSION }}" "v${{ env.VERSION }}"
 
       - name: Push changes
         uses: ad-m/github-push-action@master
@@ -113,6 +113,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: "master"
 
-      #- name: Make release from tag
-      #  run: |
-      #    gh release create
+      - name: Make release from tag
+        run: |
+          gh release create "v${{ env.VERSION }}" --target master --verify-tag --title "pbtbx ${{ env.VERSION }}" --generate-notes
