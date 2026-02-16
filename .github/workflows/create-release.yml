@@ -79,7 +79,7 @@ jobs:
 
   merge-and-tag:
     runs-on: ubuntu-latest
-    needs: prepare-release
+    needs: make-pull-request
     steps:
       #- name: Merge PR
       #  id: mgr
